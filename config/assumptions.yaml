@@ -247,3 +247,8 @@ yards:
     rider_extra_hours_per_day: 2
     hospital_capacity_head: 25
     hospital_baseline_occupancy: 0.50
+
+# Individual-animal secondary view (P2). Ranking aid only: no animal-level records exist. Not used by the optimizer.
+individual_view:
+  weight_sd_within_lot_lb: 45   # ASM: spread of arrival weights within a lot (range 30-70 lb); no source in the supplied literature
+  watch_fraction: 0.10          # ASM: share of head flagged "look at first" for pen riders (range 0.05-0.20)

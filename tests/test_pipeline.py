@@ -248,3 +248,27 @@ def test_chute_check_reports_shortfall_without_changing_the_plan(world):
     assert (chute["status"] == "SHORTFALL").all()
     assert a.choice == b.choice
     assert chute["value_of_one_more_unit"].isna().all()
+
+
+# ---------- individual-animal secondary view ----------
+def test_animal_view_preserves_lot_risk_and_ranks_by_weight(world):
+    from src.model.animals import animal_view
+    _, cur, cfg, model, r, _ = world
+    for i in range(3):
+        lot = cur.iloc[i]
+        a = animal_view(model, lot, float(r.iloc[i]["risk_mean"]), cfg)
+        assert len(a) == int(lot["head_count"])
+        assert abs(a["risk"].mean() - r.iloc[i]["risk_mean"]) < 1e-6          # lot expected cases unchanged
+        assert a["risk"].between(0, 1).all()
+        assert np.corrcoef(a["arrival_weight_lb"], a["risk"])[0, 1] < 0      # lighter head rank higher (sign-constrained)
+        assert a["watch_first"].sum() == int(np.ceil(cfg["individual_view"]["watch_fraction"] * len(a)))
+        b = animal_view(model, lot, float(r.iloc[i]["risk_mean"]), cfg)
+        pd.testing.assert_frame_equal(a, b)                                     # deterministic per lot
+
+
+def test_animal_view_handles_missing_weight(world):
+    from src.model.animals import animal_view
+    _, cur, cfg, model, r, _ = world
+    lot = cur.iloc[0].copy()
+    lot["arrival_weight_lb"] = np.nan
+    assert animal_view(model, lot, 0.1, cfg) is None

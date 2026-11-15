@@ -14,10 +14,17 @@ if str(ROOT) not in sys.path:
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.io as pio
+
+pio.templates["ranch"] = go.layout.Template(layout=dict(
+    paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="#FBF6EC", font=dict(color="#2B2118"),
+    xaxis=dict(gridcolor="#E3D3B6", zerolinecolor="#C9B28C"), yaxis=dict(gridcolor="#E3D3B6", zerolinecolor="#C9B28C")))
+pio.templates.default = "plotly+ranch"
 import streamlit as st
 
 from src.config import load_assumptions, param_specs, param_values
 from src.data.generate import ARRIVAL_COLUMNS, config_hash
+import base64
 import json
 
 from src.decision import followup as fu
@@ -26,8 +33,9 @@ from src.decision.consequences import COST_PARTS, OPTIONS, cost_breakdown, plan_
 from src.decision.optimize import BASELINE_RULES, capacities, optimize
 from src.decision.summary import build_summary
 from src.model import risk as riskmod
+from src.model.animals import animal_view
 
-st.set_page_config(page_title="BRD Arrival Decision Aid", page_icon="🐄", layout="wide")
+st.set_page_config(page_title="BRD Arrival Decision Aid", layout="wide")
 
 DATA = ROOT / "data"
 CURRENT = "Current approach"
@@ -86,6 +94,12 @@ def get_risk(lots: pd.DataFrame):
     return riskmod.assess(model, lots, load_assumptions())
 
 
+@st.cache_data(show_spinner=False)
+def get_animals(lot_dict: dict, lot_risk: float):
+    model, _ = get_model()
+    return animal_view(model, pd.Series(lot_dict), lot_risk, load_assumptions())
+
+
 @st.cache_data(show_spinner="Running Monte Carlo comparison...")
 def get_mc(lots, draws, plans_items, params_items, n=200):
     specs = param_specs(load_assumptions())
@@ -142,7 +156,7 @@ if "_pending_scenario" in st.session_state:
         _msg += " NOTE: the veterinarian high-risk step-down override is ON in this scenario."
     st.session_state["_scenario_msg"] = _msg
 
-st.sidebar.title("🐄 BRD Decision Aid")
+st.sidebar.title("BRD Decision Aid")
 st.sidebar.caption("Arrival decisions for the first 45 days on feed")
 
 src = st.sidebar.radio("Arrival data", ["Demo week (synthetic)", "Upload CSV"],
@@ -230,12 +244,36 @@ if st.sidebar.button("Reset all inputs"):
     st.rerun()
 
 # ---------- header ----------
-st.title("BRD Arrival Decision Aid")
+_hero_img = ROOT / "app" / "assets" / "cattle_herd.jpg"
+_hero_bg = (f"url(data:image/jpeg;base64,{base64.b64encode(_hero_img.read_bytes()).decode()})"
+            if _hero_img.exists() else "none")
+st.markdown(f"""
+<style>
+.ranch-hero {{position:relative; min-height:250px; border-radius:14px; overflow:hidden; margin-bottom:8px;
+  background-color:#3A2A1E;
+  background-image:linear-gradient(90deg, rgba(30,20,12,0.88) 0%, rgba(30,20,12,0.62) 45%, rgba(30,20,12,0.10) 100%), {_hero_bg};
+  background-size:cover; background-position:center 38%; border-bottom:5px solid #8B3A1E;}}
+.ranch-hero .txt {{position:relative; padding:34px 34px 26px 34px; max-width:640px;}}
+.ranch-hero h1 {{color:#F7F0E2; margin:0; padding:0; font-size:2.3rem; line-height:1.12; letter-spacing:-0.01em;}}
+.ranch-hero p {{color:#EADBC0; margin:8px 0 0 0; font-size:1.02rem; line-height:1.45;}}
+.ranch-hero .tag {{display:inline-block; background:#E9B44C; color:#2B2118; font-weight:600; font-size:0.8rem;
+  padding:3px 12px; border-radius:20px; margin-top:14px;}}
+.ranch-hero .credit {{position:absolute; right:12px; bottom:8px; font-size:0.68rem; color:rgba(247,240,226,0.85);}}
+div[data-baseweb="tab-list"] button p {{font-weight:600;}}
+section[data-testid="stSidebar"] {{border-right:4px solid #C9B28C;}}
+</style>
+<div class="ranch-hero"><div class="txt">
+  <h1>BRD Arrival Decision Aid</h1>
+  <p>Receiving decisions for the first 45 days on feed across four yards in the Texas Panhandle and western Kansas:
+  which lots need attention, what to do, what it costs, and whether the crew can deliver it.</p>
+  <span class="tag">Synthetic demo data &middot; medication changes require veterinary review</span></div>
+  <div class="credit">Photo: Keith Weller, USDA Agricultural Research Service (public domain)</div>
+</div>
+""", unsafe_allow_html=True)
 st.warning("**Demonstration build.** Lots and outcomes are **synthetic**; intervention effects are **assumptions** "
-           "you can change, not validated results. **Medication-related recommendations require veterinary review.**",
-           icon="⚠️")
+           "you can change, not validated results. **Medication-related recommendations require veterinary review.**")
 
-tabs = st.tabs(["★ Start here", "1 · Lots & data", "2 · Risk priorities", "3 · Plan vs current approach",
+tabs = st.tabs(["Start here", "1 · Lots & data", "2 · Risk priorities", "3 · Plan vs current approach",
                 "4 · What-if & sensitivity", "5 · Decision summary", "6 · Days 1-14 check-in",
                 "7 · Model & evidence"])
 
@@ -511,6 +549,40 @@ with tabs[2]:
                                       "p_high": "P(≥15%) %", "drivers": "main drivers"}),
                  hide_index=True, use_container_width=True)
 
+    with st.expander("Individual animals in one lot (secondary view: which head to look at first)"):
+        st.caption("A **ranking aid for pen riders**, not a diagnosis. No animal-level records exist, so each head gets "
+                   "a synthetic arrival weight around the lot mean (within-lot spread is an assumption), and its risk "
+                   "is the lot model at that weight. The animal risks average to the lot's risk, so the lot's expected "
+                   "cases do not change. Caveat: the model was fitted to lot averages, so this assumes the weight "
+                   "effect within a lot matches the effect between lots. Real use needs per-head records.")
+        _order = risk.sort_values("risk_mean", ascending=False)
+        _lid = st.selectbox("Lot", _order["lot_id"].tolist(), key="animal_lot",
+                            format_func=lambda x: f"{x} (yard {risk.set_index('lot_id').loc[x, 'yard']}, "
+                                                  f"{100 * risk.set_index('lot_id').loc[x, 'risk_mean']:.0f}% risk)")
+        _i = int(np.flatnonzero(lots["lot_id"].to_numpy() == _lid)[0])
+        _av = get_animals(lots.iloc[_i].to_dict(), float(risk.iloc[_i]["risk_mean"]))
+        if _av is None:
+            st.warning("This lot has no head count or arrival weight, so there is nothing to rank individuals by.")
+        else:
+            a1, a2, a3 = st.columns(3)
+            a1.metric("Head in lot", len(_av))
+            a2.metric("Expected BRD cases if untreated", f"{_av['risk'].sum():.1f}")
+            a3.metric("Look at first", int(_av["watch_first"].sum()),
+                      help="Top share of head by risk (config individual_view.watch_fraction, an assumption).")
+            _h = go.Figure(go.Histogram(x=_av["risk"] * 100, nbinsx=25, marker_color="#2F6690"))
+            _h.add_vline(x=float(risk.iloc[_i]["risk_mean"]) * 100, line_dash="dash", annotation_text="lot average")
+            _h.update_layout(height=260, xaxis_title="Animal risk (%)", yaxis_title="Head",
+                             margin=dict(l=10, r=10, t=30, b=10))
+            st.plotly_chart(_h, use_container_width=True)
+            _w = _av[_av["watch_first"]].copy()
+            _w["risk"] = (_w["risk"] * 100).round(1)
+            st.dataframe(_w.rename(columns={"animal_id": "animal", "arrival_weight_lb": "arrival weight (lb)",
+                                            "risk": "risk %", "watch_first": "look at first"}),
+                         hide_index=True, use_container_width=True)
+            if risk.iloc[_i]["confidence"] != "confident":
+                st.info(f"This lot is labelled *{risk.iloc[_i]['confidence']}*, so its animal ranking inherits "
+                        "the lot's uncertainty.")
+
 # ---------- tab 3: plan ----------
 with tabs[3]:
     st.subheader("Recommended plan vs the current operating approach")
@@ -527,12 +599,12 @@ with tabs[3]:
                "The recommended plan minimises expected BRD cost + stewardship penalty within capacity, "
                "under a hard minimum-care floor.")
     for s in res.shortfalls:
-        st.error("**Capacity shortfall** - " + s, icon="🚨")
+        st.error("**Capacity shortfall** - " + s)
     stepdowns = res.plan[res.plan["vet_flag"] == "HIGH-RISK STEP-DOWN"]
     if len(stepdowns):
         st.error("**High-risk step-down - veterinarian sign-off required:** " + ", ".join(stepdowns["lot_id"]) +
                  ". These high-risk lots would get enhanced monitoring instead of metaphylaxis; see the lot reasons "
-                 "for the case/death/antimicrobial trade-off.", icon="🩺")
+                 "for the case/death/antimicrobial trade-off.")
     stats = (f"cheaper in **{100 * mcs['p_cheaper']:.0f}%** of uncertainty draws, no more deaths in "
              f"**{100 * mcs['p_fewer_deaths']:.0f}%**, fewer antimicrobial regimens in "
              f"**{100 * mcs['p_fewer_regimens']:.0f}%**")
@@ -825,7 +897,7 @@ with tabs[7]:
     ev = get_eval()
     st.error("These metrics come from **synthetic** lots generated by our own assumptions. They show that "
              "the pipeline recovers the data-generating process - **not** real-world accuracy. Published benchmark on "
-             "real feedlot data (Rojas et al. 2022, 1,733 cohorts): **AUC 0.68-0.79, PPV 11-25%**.", icon="🔬")
+             "real feedlot data (Rojas et al. 2022, 1,733 cohorts): **AUC 0.68-0.79, PPV 11-25%**.")
     a, b, c, d = st.columns(4)
     st.caption(f"Temporal hold-out: trained on {ev['n_train']} lots that arrived before {ev['cutoff']}, tested on the "
                f"{ev['n_test']} lots that arrived after (the model never saw them). The label is OBSERVED 45-day "
@@ -907,7 +979,7 @@ with tabs[7]:
         _stale = V.get("config_hash") != config_hash()
         st.caption(f"Pre-computed by `python -m scripts.run_validation` on {V['generated']} (about 15 minutes; too slow "
                    "to run live). Full write-up: `docs/VALIDATION_REPORT.md`."
-                   + (" ⚠️ The synthetic world has changed since; re-run the script." if _stale else ""))
+                   + (" Warning: the synthetic world has changed since; re-run the script." if _stale else ""))
         rb = V["regret_base"]["headline"]
         sm = {r["policy"]: r for r in V["regret_base"]["summary"]}
         worst = min(V["stress"], key=lambda r: r["realised_saving"])
@@ -938,8 +1010,7 @@ with tabs[7]:
                    + ("This is also the worst scenario for cattle health. " if wdeath is worst else
                       f"**Worst for cattle health** ({wdeath['label']}): deaths change by {wdeath['d_deaths']:+.2f}/week "
                       f"and the plan costs more in {100 * wdeath['p_loss_week']:.0f}% of weeks. ") +
-                   "The benefit of extra riding cannot be validated on these data; confirm effects with the veterinarian.",
-                   icon="⚠️")
+                   "The benefit of extra riding cannot be validated on these data; confirm effects with the veterinarian.")
         with st.expander("Stress tests, leave-one-yard-out and baselines"):
             stt = pd.DataFrame(V["stress"])[["label", "auc", "cal_slope", "estimated_saving", "realised_saving",
                                               "p_loss_week", "d_deaths", "floor_violations_per_week"]]

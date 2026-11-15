@@ -1,0 +1,11 @@
+# Ranch palette: hay-coloured backdrop, straw sidebar, saddle-leather accent, dark-brown text.
+[theme]
+base = "light"
+primaryColor = "#8B3A1E"
+backgroundColor = "#F3EBDC"
+secondaryBackgroundColor = "#E6D7BC"
+textColor = "#2B2118"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false

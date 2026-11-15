@@ -17,7 +17,7 @@ Each week a feedlot manager decides how to receive every arriving lot: standard 
 | **Days 1–14** | Pull counts update each lot's risk (Bayesian), flag lots tracking above plan, and project hospital load | Monitoring and staffing actions only; never drug advice |
 
 ## 3. The solution (what a judge can click)
-`streamlit run app/app.py` opens an 8-tab dashboard: **★ Start here** (this week's answer in plain words), Lots & data (upload or edit), Risk priorities, Plan vs current approach, What-if & sensitivity, Decision summary (downloadable, with a veterinary sign-off block), Days 1–14 check-in, and Model & evidence. Every input recomputes live. A 3-minute script is in `docs/DEMO_CASE.md`.
+`streamlit run app/app.py` opens an 8-tab dashboard: **Start here** (this week's answer in plain words), Lots & data (upload or edit), Risk priorities, Plan vs current approach, What-if & sensitivity, Decision summary (downloadable, with a veterinary sign-off block), Days 1–14 check-in, and Model & evidence. Every input recomputes live. A 3-minute script is in `docs/DEMO_CASE.md`.
 
 ## 4. Key findings
 **Demo week** (24 lots, 3,406 head, default assumptions):

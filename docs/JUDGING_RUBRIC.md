@@ -9,7 +9,7 @@ Treat the weights as a planning aid, not as fact.
 
 | # | Criterion (likely weight) | What judges will look for | Where we show it |
 |---|---|---|---|
-| 1 | **Problem framing and decision relevance (15%)** | Clear user, decision unit, decision times and 45-day window. Risk → Action → Consequences → Feasibility connected. | Brief §1; app "★ Start here" four-question strip; `docs/DESIGN.md` §1 estimands |
+| 1 | **Problem framing and decision relevance (15%)** | Clear user, decision unit, decision times and 45-day window. Risk → Action → Consequences → Feasibility connected. | Brief §1; app "Start here" four-question strip; `docs/DESIGN.md` §1 estimands |
 | 2 | **Scientific credibility of evidence and assumptions (20%)** | Every number sourced and tagged as observed, estimated or assumed. No invented data. Effects treated as assumptions. Literature used appropriately. | `config/assumptions.yaml` (value, range, tag, source); `docs/SOURCES.md`; `docs/LITERATURE_REVIEW.md`; Model & evidence tab parameter table |
 | 3 | **Analytical rigour and validation (20%)** | Leakage-free pipeline; honest validation (temporal, by yard); calibration; uncertainty; misspecification; decision-level validation; synthetic circularity acknowledged. | `docs/DESIGN.md` §3–5; `docs/VALIDATION_REPORT.md`; `docs/CRITIC_LOG.md`; tests in `tests/` and `tests/critic/` |
 | 4 | **Working, interactive dashboard (15%)** | The 5 manager capabilities; live recompute; flags low confidence; vet caveat; runs free with one command. | `app/app.py` (8 tabs); README launch steps; Playwright test |

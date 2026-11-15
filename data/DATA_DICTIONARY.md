@@ -58,3 +58,13 @@ Calibration targets: mean observed morbidity of about 11% (between Rojas 2022's 
 | Variable | Unit | Definition | Available | Demo values |
 |---|---|---|---|---|
 | pulls_to_date | head | Animals in the lot given a first BRD treatment from arrival up to the chosen day on feed (1–14). Blank = not recorded. | D1–D14 | **Synthetic**: one plausible lot morbidity is drawn from the arrival risk prior (model draws plus lot-level dispersion) and pulls are drawn as Binomial(head, morbidity × day/21) (beta-binomial only if the `pen_clustering_icc` sensitivity input is raised above its default of 0), seed 150 (`src/decision/followup.py::simulate_pulls`): its day-7 total (123 pulls) is close to the median over 200 seeds (120), so the demo is typical rather than favourable. Not real records. |
+
+## Individual-animal view (generated in the app, not stored)
+| Variable | Unit | Definition | Provenance |
+|---|---|---|---|
+| animal_id | — | `<lot_id>-<nnn>`, one per head in the lot | Generated |
+| arrival_weight_lb | lb | Per-head arrival weight drawn as Normal(lot mean, SD), clipped at ±3 SD and seeded by lot_id. SD = `individual_view.weight_sd_within_lot_lb` (45 lb, ASM, range 30–70) | **Synthetic**; no per-head records exist |
+| risk | probability | The lot risk model evaluated at this head's weight, with the lot's other fields held fixed, then shifted on the logit scale so the head risks average to the lot's risk | Derived (`src/model/animals.py`) |
+| watch_first | flag | True for the top `individual_view.watch_fraction` (10%, ASM) of head by risk | Derived |
+
+This is a ranking aid only. Applying a lot-level model to individuals assumes the within-lot weight effect equals the between-lot one (ecological inference).

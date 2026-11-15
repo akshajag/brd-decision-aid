@@ -71,6 +71,11 @@ These sources were found in a rapid literature screen (see `docs/LITERATURE_REVI
 | VanCalster2019 | Van Calster B, McLernon DJ, van Smeden M, Wynants L, Steyerberg EW. Calibration: the Achilles heel of predictive analytics. *BMC Med* 2019;17:230. doi:10.1186/s12916-019-1466-7 | CC BY (BMC); metadata checked | Calibration reporting |
 | Vickers2006 | Vickers AJ, Elkin EB. Decision curve analysis. *Med Decis Making* 2006;26(6):565–574. doi:10.1177/0272989X06295361 | Subscription; metadata checked | Net-benefit evaluation |
 
+## Images
+| Asset | Source | Licence | Used in |
+|---|---|---|---|
+| `app/assets/cattle_herd.jpg` | "Cattle herd", photo by Keith Weller, USDA Agricultural Research Service (image K4328-8), via Wikimedia Commons (File:Cattle_herd.jpg), 960 px version | Public domain (work of the US federal government) | Dashboard header banner (decorative only, not data) |
+
 ## AI tools
 Claude Code (Anthropic) was used to help write code, design the synthetic data and draft documentation. The team must check every number against the PDFs before submission.
 
