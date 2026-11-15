@@ -1,0 +1,249 @@
+# Single source of truth for every domain number used by the app.
+# tag: EST = published estimate (other population/years); ASM = team assumption (no direct evidence).
+#      OBS is reserved for values observed in real data we hold (none yet).
+# low/high = plausible range used for sliders and Monte Carlo (triangular low/base/high).
+# Source keys refer to docs/SOURCES.md.
+
+decision:
+  window_days: 45
+  high_risk_morbidity: 0.15          # EST: Rojas2022 cohort high-risk definition (>=15% first-treatment BRD in 45 DOF)
+  moderate_risk_morbidity: 0.08      # ASM: tier boundary for display; no source
+  baseline_meta_weight_lb: 700       # ASM default for the current operating rule (editable in the app). NAHMS2019 reports weight classes <700 vs >=700 lb; it also reports only 15.6% of cattle were group-treated, so this default is a generous comparator.
+  # Pre-registered decision cut-offs (D19). Chosen before seeing results; kept here so they are visible and editable.
+  verdict_min_p_cheaper: 0.70        # ASM: confident verdict needs the plan cheaper in >=70% of Monte Carlo draws
+  verdict_min_p_no_more_deaths: 0.80 # ASM: ...and no more deaths in >=80% of draws
+  insufficient_data_min_missing: 2   # ASM: lots missing >=2 of the 3 critical fields are 'insufficient data'
+  interval_level: 0.90               # ASM: width of the epistemic risk range (5th-95th percentile)
+  escalate_ratio: 1.5                # ASM: check-in 'above expected' if pulls > max(1.5 x expected, expected + 3)
+  escalate_excess: 3
+  borderline_floor: true             # ASM (critic R2-13): lots whose 90% range reaches 15% never get standard care only
+  slack_penalty_usd: 10000           # ASM (D19): optimizer cost per unit of hospital/antimicrobial shortfall; large so slack is used only when no feasible plan exists
+  robust_effect_keys: [metaphylaxis_morbidity_rrr, enhanced_monitoring_cfr_rrr, receiving_protocol_morbidity_rrr]  # ASM (R2-1): effects whose range ends are checked before the tool may say "robust"
+  drift_window_days: 180             # ASM (R2-8): recent window checked for a shift in risk
+  drift_alarm_z: 2.5                 # ASM (R2-8): alarm and recalibrate the intercept if the out-of-sample shift exceeds 2.5 standard errors
+
+economics:
+  treatment_cost_per_case:
+    value: 23.60
+    low: 18.0
+    high: 35.0
+    unit: USD per BRD case (first treatment)
+    tag: EST
+    source: NAHMS2011 via Johnson2017; also used by Rojas2022
+    note: 2011 nominal dollars; upper range allows for inflation and retreatment drugs.
+  production_loss_per_case:
+    value: 127.58
+    low: 80.0
+    high: 220.0
+    unit: USD per BRD case, excluding drug cost
+    tag: ASM
+    source: Derived from Rojas2022 ($151.18 lost value per treated animal, which Rojas states includes medicine costs) minus treatment cost $23.60
+    note: PRICE YEAR - Rojas's $151.18 comes from 2000-01 Texas A&M Ranch to Rail data (Rojas ref. 33), so it is old dollars, while death losses use current feeder prices. That makes preventing cases look cheap relative to preventing deaths. Weber2024 suggests losses are larger for light calves. The high end of the range covers inflation.
+  metaphylaxis_cost_per_head:
+    value: 23.60
+    low: 15.0
+    high: 35.0
+    unit: USD per head (drug + administration)
+    tag: EST
+    source: Rojas2022 (cost of a false-positive metaphylaxis decision), which reuses the NAHMS2011 average respiratory treatment cost
+    note: 2011 dollars; actual metaphylaxis product cost varies widely, so enter the yard's own figure.
+  feeder_price_per_lb:
+    value: 3.00
+    low: 2.20
+    high: 4.00
+    unit: USD per lb live weight at arrival
+    tag: ASM
+    source: Placeholder; managers should enter their current purchase price
+    note: Used for death-loss value. Weber2024's purchase prices were about $1.46-$1.74/lb (price year not verified).
+  death_loss_extra_cost:
+    value: 60.0
+    low: 30.0
+    high: 120.0
+    unit: USD per death (feed, processing, disposal already sunk)
+    tag: ASM
+    source: Team assumption
+  labor_cost_per_hour:
+    value: 22.0
+    low: 16.0
+    high: 32.0
+    unit: USD per rider hour
+    tag: ASM
+    source: Team assumption
+  receiving_protocol_cost_per_head:
+    value: 4.0
+    low: 2.0
+    high: 8.0
+    unit: USD per head (long-stem hay, rest pen time, delayed processing labor)
+    tag: ASM
+    source: Team assumption
+  amu_stewardship_weight:
+    value: 5.0
+    low: 0.0
+    high: 40.0
+    unit: USD-equivalent penalty per antimicrobial regimen
+    tag: ASM
+    source: Policy weight set by leadership; not a market cost
+    note: Makes the antimicrobial-use trade-off explicit. Set to 0 to optimize on cash cost only.
+
+health:
+  case_fatality_rate:
+    value: 0.07
+    low: 0.04
+    high: 0.12
+    unit: proportion of BRD cases that die within the feeding period
+    tag: EST
+    source: Neal2024 (132,521 first BRD treatments, 14 central-US feedyards, 2017-20) BRD case fatality 6.3%, all-cause 10.0%; also chosen so BRD mortality is ~0.5-1.3% of head at typical morbidity, i.e. NAHMS2019 all-cause mortality (2.3% <700 lb, 1.2% >=700 lb) x BRD's ~45-55% share of deaths (Johnson2017)
+  retreat_fraction:
+    value: 0.25
+    low: 0.10
+    high: 0.40
+    unit: extra treatment regimens per case
+    tag: ASM
+    source: Team assumption; Weber2024 shows retreatment (2x, 3x+) is common; Neal2024 first-treatment success 67.8% (so ~32% of cases are retreated or die)
+  hospital_days_per_case:
+    value: 3.0
+    low: 2.0
+    high: 5.0
+    unit: head-days in hospital pen per case
+    tag: ASM
+    source: Team assumption
+  pen_clustering_icc:
+    value: 0.0
+    low: 0.0
+    high: 0.08
+    unit: extra clustering of early pulls within a lot (beta-binomial intra-class correlation; 0 = off)
+    tag: ASM
+    source: Sensitivity check only, default off. Lot-to-lot spread (resid_sd, fitted net of binomial noise) already contains extra-binomial variation such as within-pen spread (transmission dynamics reviewed in Adekunle2026a), so turning this on partly double-counts it. Raising it treats pulls-to-date as noisier (e.g. bursts in timing), so updated risks move back toward the arrival estimate and FEWER lots are escalated - the less cautious direction. Used only in the days 1-14 check-in.
+
+# Intervention effects. NONE of these is validated for this operation. They are sliders.
+interventions:
+  case_onset_spread_days:
+    value: 21
+    low: 14
+    high: 30
+    unit: days over which most first BRD pulls occur (converts case head-days to peak hospital load)
+    tag: ASM
+    source: Team assumption; most BRD pulls occur in the first weeks after arrival
+  enhanced_monitoring_days:
+    value: 14
+    low: 7
+    high: 21
+    unit: days of twice-daily pen riding after arrival
+    tag: ASM
+    source: Team assumption
+  metaphylaxis_morbidity_rrr:
+    value: 0.45
+    low: 0.25
+    high: 0.65
+    unit: relative reduction in 45-day BRD morbidity
+    tag: EST
+    source: Baptiste2017 meta-analysis of randomised trials, prophylaxis + metaphylaxis pooled BRD morbidity RR 0.49 (95% CI 0.45-0.53), 0.52 after trim-and-fill for publication bias, i.e. RRR about 0.48-0.51, with high heterogeneity; Rojas2022 economic model used efficacy 0.5 citing Avra et al. (Rojas ref. 35); direction also in Adekunle2026a ("substantially reduces morbidity and mortality")
+    note: Trial cattle, many products and years, not an effect measured in these yards. Deaths fall in proportion to cases in our model (RR 0.55), close to Baptiste2017's pooled mortality RR 0.62. Default 0.45 sits just below the pooled estimate; range 0.25-0.65 for sensitivity. Confirm with the consulting veterinarian.
+  enhanced_monitoring_cfr_rrr:
+    value: 0.20
+    low: 0.0
+    high: 0.40
+    unit: relative reduction in case fatality from earlier detection and treatment
+    tag: ASM
+    source: Direction supported by Adekunle2026a ("early detection and prompt treatment are critical"); no quantified effect in supplied sources
+    note: The plan's "fewer deaths" result depends on this value. Below about 0.04 the recommended plan has more deaths than the current approach, and the What-if tab shows this.
+  receiving_protocol_morbidity_rrr:
+    value: 0.10
+    low: 0.0
+    high: 0.25
+    unit: relative reduction in morbidity from low-stress receiving (rest, hay, delayed processing)
+    tag: ASM
+    source: Direction supported by stress and nutrition risk factors in Adekunle2026b; no quantified effect in supplied sources
+  enhanced_monitoring_hours_per_pen_day:
+    value: 0.5
+    low: 0.3
+    high: 1.0
+    unit: extra rider hours per pen per day, days 1-14
+    tag: ASM
+    source: Team assumption
+  head_per_pen:
+    value: 150
+    low: 100
+    high: 200
+    unit: head per home pen
+    tag: ASM
+    source: Team assumption; Weber2024 simulated a representative 120-head pen
+
+# Data-generating process for SYNTHETIC demo data. Directions follow the cited risk-factor literature.
+# Magnitudes are ASM, chosen to give plausible morbidity and a realistic (not optimistic) AUC.
+dgp:
+  intercept: -3.75                # logit of untreated morbidity for the reference lot; tuned so mean observed morbidity ~11% (between Rojas2022 6.3% and NAHMS2011 21.2%)
+  weight_per_100lb_below_700: 0.38 # lighter cattle at higher risk (Rojas2022, NAHMS2019, Weber2024)
+  source_auction: 0.65             # commingling and sale-barn stress (Adekunle2026b)
+  source_backgrounded: -0.40       # preconditioned or backgrounded (Adekunle2026a)
+  per_extra_source: 0.06           # commingling index: number of origins beyond 1
+  transit_per_hour: 0.018          # transport stress (Adekunle2026b)
+  vacc_unknown: 0.30
+  vacc_known: -0.25
+  sex_heifer: 0.10
+  sex_mixed: 0.30                  # mixed-gender lots (Weber2024 intro)
+  quarter: {Q1: 0.20, Q2: 0.0, Q3: 0.10, Q4: 0.45}   # arrival season (Rojas2022 used quarter)
+  shrink_per_pct_above_3: 0.07     # transit shrink as a nutrition and dehydration indicator
+  crowding_per_m2_below_15: 0.02   # pen area per head (Rojas2022 pen variables)
+  weather: {low: 0.0, moderate: 0.12, high: 0.35}
+  yard_effect_sd: 0.15
+  lot_unobserved_sd: 1.3          # unmeasured lot heterogeneity. Held-out synthetic AUC is ~0.82, slightly ABOVE the published 0.68-0.79 (Rojas2022): our generator includes predictors Rojas lacked (source, transit, vaccination). Synthetic high-risk prevalence is ~26% vs 10.85% in Rojas, which raises PPV.
+  hist_meta_prob_light: 0.85       # historical discretion: P(metaphylaxis | <700 lb)
+  hist_meta_prob_heavy: 0.10
+  # TRUE intervention effects used only by the simulator (D14). They are deliberately separate from the
+  # planner's assumptions under `interventions:` so a decision study can score plans under a truth that differs
+  # from what the planner assumes. Defaults equal the planner's values; stress scenarios (src/model/stress.py) move them.
+  true_metaphylaxis_rrr: 0.45
+  true_enhanced_monitoring_cfr_rrr: 0.20
+  true_receiving_protocol_morbidity_rrr: 0.10
+
+# Processing-chute feasibility check (ASM; no throughput figure in the supplied literature). Reported, not optimized:
+# every lot is processed whatever option it gets, so chute load barely depends on the plan.
+processing:
+  chute_head_per_hour: 120             # ASM: arrival processing throughput (range 80-180 head/h)
+  processing_days_per_week: 5          # ASM: days the crew processes in an arrival week (range 4-6)
+  metaphylaxis_extra_handling_frac: 0.10  # ASM: extra chute time when metaphylaxis is given at processing (range 0-0.25)
+  chute_hours_per_day: {A: 8, B: 6, C: 6, D: 4}  # ASM: crew chute time per processing day (range about -2 to +4 h each)
+
+# Four yards. Profiles and capacities are ASM scenarios chosen to create meaningful operating differences.
+yards:
+  A:
+    name: "Yard A (TX Panhandle, north)"
+    profile: "Large yard, mostly ranch-direct yearlings"
+    weight_mean: 780
+    weight_sd: 70
+    source_mix: {ranch_direct: 0.55, backgrounded: 0.30, auction: 0.15}
+    transit_mean_h: 8
+    rider_extra_hours_per_day: 10
+    hospital_capacity_head: 60
+    hospital_baseline_occupancy: 0.35
+  B:
+    name: "Yard B (TX Panhandle, west)"
+    profile: "Lightweight sale-barn calves, long hauls, tight hospital"
+    weight_mean: 540
+    weight_sd: 60
+    source_mix: {ranch_direct: 0.10, backgrounded: 0.15, auction: 0.75}
+    transit_mean_h: 18
+    rider_extra_hours_per_day: 4
+    hospital_capacity_head: 50
+    hospital_baseline_occupancy: 0.55
+  C:
+    name: "Yard C (SW Kansas)"
+    profile: "Mixed backgrounded and auction cattle"
+    weight_mean: 680
+    weight_sd: 80
+    source_mix: {ranch_direct: 0.25, backgrounded: 0.40, auction: 0.35}
+    transit_mean_h: 12
+    rider_extra_hours_per_day: 6
+    hospital_capacity_head: 45
+    hospital_baseline_occupancy: 0.45
+  D:
+    name: "Yard D (W Kansas, small)"
+    profile: "Smaller yard, short-staffed, harsh weather swings"
+    weight_mean: 620
+    weight_sd: 90
+    source_mix: {ranch_direct: 0.30, backgrounded: 0.20, auction: 0.50}
+    transit_mean_h: 14
+    rider_extra_hours_per_day: 2
+    hospital_capacity_head: 25
+    hospital_baseline_occupancy: 0.50

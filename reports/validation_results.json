@@ -1,0 +1,499 @@
+{
+ "generated": "2026-11-14",
+ "config_hash": "e1c24b9bc2d314db",
+ "quick": false,
+ "temporal": {
+  "n_train": 1022,
+  "n_test": 378,
+  "auc": 0.8237238054507989,
+  "brier": 0.1340412270735912,
+  "cal_in_the_large": 0.0033854993170891745,
+  "cal_slope": 1.0751729996120019,
+  "resid_sd": 1.2814473140479319,
+  "sensitivity": 0.3707865168539326,
+  "specificity": 0.9515570934256056,
+  "ppv": 0.7021276595744681,
+  "npv": 0.8308157099697885,
+  "prevalence": 0.23544973544973544,
+  "ccc": 0.47600097859738955,
+  "ccc_ceiling": 0.48755319545990017
+ },
+ "baselines": {
+  "B0": {
+   "brier": 0.18165177290448722,
+   "auc": 0.5
+  },
+  "B1": {
+   "brier": 0.15803720103434327,
+   "auc": 0.7317172738229463
+  },
+  "B2": {
+   "brier": 0.15264015760345206,
+   "auc": 0.762723066754792
+  },
+  "full": {
+   "auc": 0.8237238054507989,
+   "brier": 0.1340412270735912
+  }
+ },
+ "loyo": [
+  {
+   "yard": "A",
+   "n_test": 456,
+   "auc": 0.7111595255386105,
+   "brier": 0.09051508821526585,
+   "cal_in_the_large": -0.0022480535181482117,
+   "cal_slope": 0.9435148809769995
+  },
+  {
+   "yard": "B",
+   "n_test": 358,
+   "auc": 0.7382341867469879,
+   "brier": 0.20587908981694855,
+   "cal_in_the_large": -0.006292942049288375,
+   "cal_slope": 0.8222763278278773
+  },
+  {
+   "yard": "C",
+   "n_test": 327,
+   "auc": 0.8348853054735408,
+   "brier": 0.12734679593727705,
+   "cal_in_the_large": 0.005614090431897895,
+   "cal_slope": 1.2183753212350914
+  },
+  {
+   "yard": "D",
+   "n_test": 259,
+   "auc": 0.779204194112112,
+   "brier": 0.18633076737088644,
+   "cal_in_the_large": 0.01851661967005705,
+   "cal_slope": 0.9428218030681295
+  }
+ ],
+ "positivity": [
+  {
+   "band": "[700, 800)",
+   "lots": 338,
+   "treated_share": 0.098,
+   "untreated_lots": 305
+  },
+  {
+   "band": "[500, 600)",
+   "lots": 338,
+   "treated_share": 0.882,
+   "untreated_lots": 40
+  },
+  {
+   "band": "[0, 500)",
+   "lots": 150,
+   "treated_share": 0.827,
+   "untreated_lots": 26
+  },
+  {
+   "band": "[600, 700)",
+   "lots": 379,
+   "treated_share": 0.858,
+   "untreated_lots": 54
+  },
+  {
+   "band": "[800, 2000)",
+   "lots": 195,
+   "treated_share": 0.072,
+   "untreated_lots": 181
+  }
+ ],
+ "drift_check": {
+  "ran": true,
+  "window_days": 180,
+  "n_window": 219,
+  "z": 1.0032761496901372,
+  "observed_cases": 3473.0,
+  "expected_cases_out_of_sample": 3213.924153367144,
+  "offset": 0.07429159139496272,
+  "alarm": false
+ },
+ "oracle_recovery": [
+  {
+   "band": "[0, 500)",
+   "n": 119,
+   "bias": -0.0031168251937707288,
+   "rmse": 0.040853248799613995
+  },
+  {
+   "band": "[500, 600)",
+   "n": 273,
+   "bias": -0.009269537036416971,
+   "rmse": 0.041945767842524635
+  },
+  {
+   "band": "[600, 700)",
+   "n": 286,
+   "bias": -0.00959615473951512,
+   "rmse": 0.02718279135082589
+  },
+  {
+   "band": "[700, 800)",
+   "n": 224,
+   "bias": -0.009481737459386016,
+   "rmse": 0.019487476360899605
+  },
+  {
+   "band": "[800, 2000)",
+   "n": 98,
+   "bias": -0.0033460205006703193,
+   "rmse": 0.010711201932573314
+  },
+  {
+   "band": "all",
+   "n": 1000,
+   "bias": -0.008097805264470032,
+   "rmse": 0.03140979870856608
+  }
+ ],
+ "replicates": [
+  {
+   "history": "shipped CSV (seed 42)",
+   "lot_sd": 1.2810497303454333,
+   "coverage_90": 0.88,
+   "mean_p_high": 0.3423280088597189,
+   "true_share_high": 0.359,
+   "bias_[0, 500)": -0.008809061527527093,
+   "bias_[500, 600)": -0.009838473663616244,
+   "bias_[600, 700)": -0.014661100248539264,
+   "bias_[700, 800)": -0.009032489848025464,
+   "bias_[800, 2000)": -0.003684789936512663
+  },
+  {
+   "history": "fresh seed 9000",
+   "lot_sd": 1.3367570703656952,
+   "coverage_90": 0.961,
+   "mean_p_high": 0.3697426558879195,
+   "true_share_high": 0.359,
+   "bias_[0, 500)": -0.0008654747923928703,
+   "bias_[500, 600)": 0.00538122060424314,
+   "bias_[600, 700)": 0.0060474120701940115,
+   "bias_[700, 800)": 0.0055929666216912,
+   "bias_[800, 2000)": 0.004336127687198211
+  },
+  {
+   "history": "fresh seed 9001",
+   "lot_sd": 1.3394678830354625,
+   "coverage_90": 0.924,
+   "mean_p_high": 0.37109660320261134,
+   "true_share_high": 0.359,
+   "bias_[0, 500)": 0.013205448669625154,
+   "bias_[500, 600)": 0.004409790084746565,
+   "bias_[600, 700)": 0.004314396752489713,
+   "bias_[700, 800)": 0.0048839995902736815,
+   "bias_[800, 2000)": 0.004994813670575844
+  },
+  {
+   "history": "fresh seed 9002",
+   "lot_sd": 1.313560152712696,
+   "coverage_90": 0.908,
+   "mean_p_high": 0.3663150309233876,
+   "true_share_high": 0.359,
+   "bias_[0, 500)": -0.01248505945895905,
+   "bias_[500, 600)": -8.178213758595958e-06,
+   "bias_[600, 700)": 0.0032551391480818664,
+   "bias_[700, 800)": 0.0064085642445386275,
+   "bias_[800, 2000)": 0.010527548903135207
+  },
+  {
+   "history": "fresh seed 9003",
+   "lot_sd": 1.3269815301311263,
+   "coverage_90": 0.851,
+   "mean_p_high": 0.3859067103519478,
+   "true_share_high": 0.359,
+   "bias_[0, 500)": 0.012913031268576652,
+   "bias_[500, 600)": 0.00872559403976761,
+   "bias_[600, 700)": 0.008234825271097338,
+   "bias_[700, 800)": 0.010649155101069395,
+   "bias_[800, 2000)": 0.008116269842596512
+  },
+  {
+   "history": "fresh seed 9004",
+   "lot_sd": 1.2920230663238856,
+   "coverage_90": 0.816,
+   "mean_p_high": 0.36930216966383883,
+   "true_share_high": 0.359,
+   "bias_[0, 500)": -0.005488171689654819,
+   "bias_[500, 600)": 0.005685204423227087,
+   "bias_[600, 700)": 0.008212953021259583,
+   "bias_[700, 800)": 0.0028083380854217787,
+   "bias_[800, 2000)": 0.00025074902465713737
+  },
+  {
+   "history": "fresh seed 9005",
+   "lot_sd": 1.2975983513999811,
+   "coverage_90": 0.921,
+   "mean_p_high": 0.3589490265711926,
+   "true_share_high": 0.359,
+   "bias_[0, 500)": -0.015053808659638266,
+   "bias_[500, 600)": -0.0051125688722258944,
+   "bias_[600, 700)": -0.0036238343582851683,
+   "bias_[700, 800)": 0.0020891710682323355,
+   "bias_[800, 2000)": 0.00593940731250321
+  },
+  {
+   "history": "fresh seed 9006",
+   "lot_sd": 1.3212048483944532,
+   "coverage_90": 0.889,
+   "mean_p_high": 0.34146462752512696,
+   "true_share_high": 0.359,
+   "bias_[0, 500)": -0.01717407619324008,
+   "bias_[500, 600)": -0.016883814422599182,
+   "bias_[600, 700)": -0.009627828323299989,
+   "bias_[700, 800)": -0.003999565376174625,
+   "bias_[800, 2000)": -0.0016697851769387308
+  },
+  {
+   "history": "fresh seed 9007",
+   "lot_sd": 1.295893179441631,
+   "coverage_90": 0.908,
+   "mean_p_high": 0.3792393130089537,
+   "true_share_high": 0.359,
+   "bias_[0, 500)": 0.0022768077252506864,
+   "bias_[500, 600)": 0.007674117034658442,
+   "bias_[600, 700)": 0.00643907548641946,
+   "bias_[700, 800)": 0.006087921926187593,
+   "bias_[800, 2000)": 0.00656042212751084
+  }
+ ],
+ "regret_base": {
+  "summary": [
+   {
+    "policy": "current",
+    "realised_cost": 152929.9032935049,
+    "cases": 350.7096838417486,
+    "deaths": 24.549677868922405,
+    "regimens": 2613.370438135519,
+    "floor_violations": 1.3666666666666667,
+    "regret": 21854.92807114932
+   },
+   {
+    "policy": "oracle",
+    "realised_cost": 137434.24788993146,
+    "cases": 400.54605702960987,
+    "deaths": 24.147169171081625,
+    "regimens": 1341.5159046203455,
+    "floor_violations": 0.23333333333333334,
+    "regret": 0.0
+   },
+   {
+    "policy": "oracle_floor",
+    "realised_cost": 137974.03182836124,
+    "cases": 342.3153378442663,
+    "deaths": 20.966724620649313,
+    "regimens": 1961.2108389719995,
+    "floor_violations": 0.0,
+    "regret": 3638.2586101880715
+   },
+   {
+    "policy": "recommended",
+    "realised_cost": 139547.8924312258,
+    "cases": 354.1332213507355,
+    "deaths": 21.60826850976831,
+    "regimens": 1909.0331933550858,
+    "floor_violations": 0.0,
+    "regret": 4951.230984968067
+   }
+  ],
+  "headline": {
+   "realised_saving_vs_current": 13382.010862279092,
+   "estimated_saving_vs_current": 13515.541592214333,
+   "p_loss_week": 0.0,
+   "d_deaths_vs_current": -2.9414093591540973,
+   "d_regimens_vs_current": -704.3372447804334,
+   "cost_of_floor": 3638.2586101880715,
+   "share_weeks_confident": 0.03333333333333333,
+   "confident_and_truly_better": 1.0
+  }
+ },
+ "stress": [
+  {
+   "scenario": "base",
+   "label": "Documented process (truth = planner's assumptions)",
+   "auc": 0.8051800103868254,
+   "cal_slope": 1.041978635028189,
+   "cal_in_the_large": 0.021215463277935998,
+   "mean_regret": 4404.563954614515,
+   "estimated_saving": 13664.75718126693,
+   "realised_saving": 14268.923623849796,
+   "p_loss_week": 0.0,
+   "d_deaths": -2.1960903713068696,
+   "d_regimens": -869.9961535769127,
+   "floor_violations_per_week": 0.0,
+   "cost_of_floor": 4349.839217297278,
+   "share_weeks_confident": 0.0,
+   "confident_and_truly_better": NaN
+  },
+  {
+   "scenario": "S1_interactions",
+   "label": "Unmodelled sale-barn x high-weather interaction and curved transit effect",
+   "auc": 0.8283374384236455,
+   "cal_slope": 1.0298043483053452,
+   "cal_in_the_large": 0.02499037697294526,
+   "mean_regret": 4915.414892794599,
+   "estimated_saving": 14490.00391729408,
+   "realised_saving": 15094.662603661558,
+   "p_loss_week": 0.0,
+   "d_deaths": -3.513314978665503,
+   "d_regimens": -753.5551796173319,
+   "floor_violations_per_week": 0.0,
+   "cost_of_floor": 4139.39344278566,
+   "share_weeks_confident": 0.0,
+   "confident_and_truly_better": NaN
+  },
+  {
+   "scenario": "S2_heterogeneity",
+   "label": "More unrecorded lot-to-lot variation (logit SD 1.8 vs 1.3)",
+   "auc": 0.725097472146376,
+   "cal_slope": 0.9869494885189227,
+   "cal_in_the_large": 0.03594168392498967,
+   "mean_regret": 3586.9371636243745,
+   "estimated_saving": 12109.42669891972,
+   "realised_saving": 12088.71318747505,
+   "p_loss_week": 0.0,
+   "d_deaths": -2.709784647179909,
+   "d_regimens": -817.7130703855579,
+   "floor_violations_per_week": 0.0,
+   "cost_of_floor": 4203.741163220261,
+   "share_weeks_confident": 0.0,
+   "confident_and_truly_better": NaN
+  },
+  {
+   "scenario": "S3_mnar",
+   "label": "Transit time missing more often when the haul was long (not at random)",
+   "auc": 0.8007279154311371,
+   "cal_slope": 1.0270716802115565,
+   "cal_in_the_large": 0.021309360525925358,
+   "mean_regret": 4760.41831784955,
+   "estimated_saving": 13339.88461525636,
+   "realised_saving": 13946.120442297062,
+   "p_loss_week": 0.0,
+   "d_deaths": -2.188701009947148,
+   "d_regimens": -863.3859172404518,
+   "floor_violations_per_week": 0.0,
+   "cost_of_floor": 4349.839217297278,
+   "share_weeks_confident": 0.0,
+   "confident_and_truly_better": NaN
+  },
+  {
+   "scenario": "drift",
+   "label": "Risk rises over time (+0.35 logit per year): a temporal split must detect it",
+   "auc": 0.83510336406164,
+   "cal_slope": 1.0631650286398924,
+   "cal_in_the_large": 0.0720522189100059,
+   "mean_regret": 2399.738692694604,
+   "estimated_saving": 13738.898850824371,
+   "realised_saving": 20407.912228454923,
+   "p_loss_week": 0.0,
+   "d_deaths": -10.645367744216971,
+   "d_regimens": -238.56991638850027,
+   "floor_violations_per_week": 0.0,
+   "cost_of_floor": 4198.453726068916,
+   "share_weeks_confident": 0.0,
+   "confident_and_truly_better": NaN
+  },
+  {
+   "scenario": "S4_weaker_meta",
+   "label": "True metaphylaxis effect 0.25 (planner assumes 0.45) - favours the plan",
+   "auc": 0.8064825518084804,
+   "cal_slope": 1.0409044783991104,
+   "cal_in_the_large": 0.022971623009366532,
+   "mean_regret": 15560.002470494894,
+   "estimated_saving": 14283.772930795263,
+   "realised_saving": 23272.275542293748,
+   "p_loss_week": 0.0,
+   "d_deaths": -4.3927615882467,
+   "d_regimens": -985.4510687409271,
+   "floor_violations_per_week": 0.0,
+   "cost_of_floor": 18865.951613328736,
+   "share_weeks_confident": 0.0,
+   "confident_and_truly_better": NaN
+  },
+  {
+   "scenario": "S5_stronger_meta",
+   "label": "True metaphylaxis effect 0.65 (planner assumes 0.45) - works against the plan",
+   "auc": 0.8033539394548592,
+   "cal_slope": 1.0379026862474485,
+   "cal_in_the_large": 0.02118980049948696,
+   "mean_regret": 3270.0990110318153,
+   "estimated_saving": 13825.026001676433,
+   "realised_saving": 5813.512637362423,
+   "p_loss_week": 0.04,
+   "d_deaths": 0.6234476073751241,
+   "d_regimens": -902.268533998887,
+   "floor_violations_per_week": 0.0,
+   "cost_of_floor": 138.20610512268206,
+   "share_weeks_confident": 0.0,
+   "confident_and_truly_better": NaN
+  },
+  {
+   "scenario": "S6_no_enh_benefit",
+   "label": "Extra riding and low-stress receiving have NO true effect",
+   "auc": 0.8051800103868254,
+   "cal_slope": 1.041978635028189,
+   "cal_in_the_large": 0.021215463277935998,
+   "mean_regret": 11490.068235571945,
+   "estimated_saving": 13664.75718126693,
+   "realised_saving": 1300.0448885093997,
+   "p_loss_week": 0.44,
+   "d_deaths": 2.770963050248321,
+   "d_regimens": -838.3185169598514,
+   "floor_violations_per_week": 0.0,
+   "cost_of_floor": 1873.2099211158138,
+   "share_weeks_confident": 0.0,
+   "confident_and_truly_better": NaN
+  },
+  {
+   "scenario": "S7_adverse",
+   "label": "Adverse effects corner: metaphylaxis 0.65 AND no benefit from extra riding/receiving",
+   "auc": 0.8033539394548592,
+   "cal_slope": 1.0379026862474485,
+   "cal_in_the_large": 0.02118980049948696,
+   "mean_regret": 13163.186652008188,
+   "estimated_saving": 13825.026001676433,
+   "realised_saving": -4862.757213113858,
+   "p_loss_week": 0.8,
+   "d_deaths": 4.668754589777447,
+   "d_regimens": -876.4693823254029,
+   "floor_violations_per_week": 0.0,
+   "cost_of_floor": 24.631798001184944,
+   "share_weeks_confident": 0.0,
+   "confident_and_truly_better": NaN
+  },
+  {
+   "scenario": "S8_combined",
+   "label": "Most adverse tested: S7 effects + more lot variation (SD 1.8) + drift (+0.35 logit/yr)",
+   "auc": 0.7635019468313642,
+   "cal_slope": 1.0430034332902856,
+   "cal_in_the_large": 0.06803363368878196,
+   "mean_regret": 22785.51376989823,
+   "estimated_saving": 15216.048313591513,
+   "realised_saving": -4818.8546373893305,
+   "p_loss_week": 0.72,
+   "d_deaths": -2.3636115597942187,
+   "d_regimens": 23.032650717960333,
+   "floor_violations_per_week": 0.0,
+   "cost_of_floor": 9.56603005296085,
+   "share_weeks_confident": 0.0,
+   "confident_and_truly_better": NaN
+  }
+ ],
+ "drift_temporal": {
+  "cal_in_the_large": 0.021902480580652972,
+  "auc": 0.8002845528455286
+ },
+ "drift_scenario_check": {
+  "ran": true,
+  "window_days": 180,
+  "n_window": 267,
+  "z": 4.446795080933672,
+  "observed_cases": 6885.0,
+  "expected_cases_out_of_sample": 5329.739588008049,
+  "offset": 0.22186993057706667,
+  "alarm": true
+ }
+}

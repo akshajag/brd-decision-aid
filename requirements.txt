@@ -1,0 +1,11 @@
+# Python 3.12, 3.13 or 3.14 (3.11 and 3.15 lack wheels for some pinned versions).
+# Versions the app and tests were verified with; compatible ranges are in requirements-ranges.txt.
+streamlit==1.58.0
+pandas==3.0.3
+numpy==2.4.6
+scikit-learn==1.9.0
+scipy==1.18.0
+plotly==6.7.0
+pyyaml==6.0.3
+jinja2>=3.1          # needed by pandas Styler for the dashboard tables
+pytest==9.0.3
