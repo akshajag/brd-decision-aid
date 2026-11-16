@@ -12,9 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "dist" / "BRD_Decision_Aid_submission.zip"
 TOP = "BRD_Decision_Aid"
 EXCLUDE_DIRS = {".cache", ".venv", "venv", "__pycache__", ".pytest_cache", ".remember", ".git", "dist", ".claude",
-                ".streamlit_cache", "node_modules", "test-results"}
+                ".streamlit_cache", "node_modules", "test-results", "video_recording"}
 EXCLUDE_SUFFIX = {".pyc", ".log"}
-EXCLUDE_NAMES = {"TECHNICAL_BRIEF.html", "SUBMISSION_OVERVIEW.html", "CLAUDE.md", "JUDGING_RUBRIC.md", "IMPLEMENTATION_PLAN.md",
+EXCLUDE_NAMES = {"TECHNICAL_BRIEF.html", "SUBMISSION_OVERVIEW.html", "CLAUDE.md", "JUDGING_RUBRIC.md", "IMPLEMENTATION_PLAN.md", "VIDEO_SCRIPT.md",
                  "PRESENTATION_PREP.md"}
 
 
