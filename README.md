@@ -14,7 +14,7 @@ It connects four things for every arriving lot:
 
 The current operating approach that everything is compared against is editable. The default (metaphylaxis under 700 lb) is deliberately generous; NAHMS 2019 reports 15.6% of cattle group-treated. Scope: day-0 arrival decisions, plus a days 1–14 check-in that updates each lot's risk from BRD pulls recorded so far.
 
-**Demo video (5 min):** [`video/BRD_Decision_Aid_demo.mp4`](video/BRD_Decision_Aid_demo.mp4), a narrated walkthrough of the dashboard on the synthetic demo week.
+**Demo video (5 min):** [watch on YouTube](https://youtu.be/83PMZT6d2jI), a narrated walkthrough of the dashboard on the synthetic demo week. A copy of the file is also in [`video/BRD_Decision_Aid_demo.mp4`](video/BRD_Decision_Aid_demo.mp4).
 
 **Judges:** `SUBMISSION_CHECKLIST.md` maps each submission requirement to its file. `SUBMISSION_OVERVIEW.pdf` is a short summary.
 
