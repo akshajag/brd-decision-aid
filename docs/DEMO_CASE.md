@@ -29,14 +29,14 @@ Reproduce with `python -m src.data.generate --seed 42` followed by `streamlit ru
 | Metaphylaxis for all lots | 336 | 23.5 | 3,826 | $173,381 | 1 |
 | No metaphylaxis | 610 | 42.7 | 763 | $169,090 | 2 (fails care floor) |
 
-\*Deaths fall only if extra riding cuts case fatality by at least 4%, an unsourced team assumption (default 20%). The firmer results are 839 fewer regimens (100% of draws) and $12.7k lower expected cost (96% of draws), for about 11 more cases (10.6).
+\*Deaths fall only if extra riding cuts case fatality by more than about 4%, an unsourced team assumption (default 20%). The firmer results are 839 fewer regimens (100% of draws) and $12.7k lower expected cost (96% of draws), for about 11 more cases (10.6).
 
 **What changes (17 of 24 lots):**
 - **Withholds metaphylaxis from 6 lots** (852 head), each flagged "metaphylaxis change – requires veterinary review":
   - Low or Moderate risk lots C0015, C0016, C0018 and C0020 get standard care.
   - Borderline lots C0013 and C0014 get enhanced monitoring with low-stress receiving. Their 90% range reaches 15%, so the **borderline floor** rules out standard care only.
 - **Adds enhanced monitoring with low-stress receiving** to 10 high-risk lots that keep metaphylaxis (including C0001 and the three insufficient-data lots), and to C0002 (Moderate, 737 lb). In Yard B this uses all 4 rider hours, so C0022 keeps metaphylaxis only.
-- **No high-risk lot loses metaphylaxis.** If the vet-override box is ticked, the optimiser would move C0001 to monitoring only. It is then shown in red as a high-risk step-down that needs sign-off, with its trade-off: about +10 cases, +0.6 deaths and −102 regimens, for about $79 more in cash. Only the stewardship weight on regimens makes this step-down attractive; for the default plan the weight barely matters.
+- **No high-risk lot loses metaphylaxis.** If the vet-override box is ticked, the optimiser would move C0001 to monitoring only. It is then shown in red as a high-risk step-down that needs sign-off, with its trade-off: about +10 cases, +0.6 deaths and −102 regimens, for about $79 more in cash (all versus the recommended plan; the lot row on screen compares with the current approach: +8.8 cases, +0.30 deaths, −104 regimens, −$89). Only the stewardship weight on regimens makes this step-down attractive; for the default plan the weight barely matters.
 
 **Under uncertainty** (200 paired Monte Carlo draws over every assumption range plus risk-model uncertainty), the recommended plan:
 - is cheaper than the current approach in **96%** of draws (90% range of the saving: $0.9k–$27k);

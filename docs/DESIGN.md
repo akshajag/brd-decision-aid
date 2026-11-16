@@ -94,7 +94,7 @@ This is out-of-sample: separate seeds, never used for fitting or tuning. It also
 
 ### 5.5 Decision under uncertainty
 - Paired Monte Carlo over epistemic parameters (200 draws).
-- The verdict is pre-registered: P(cheaper) ≥ 0.70 and P(no more deaths) ≥ 0.80 (**[v2]** in `config/assumptions.yaml`, `decision:`). **[v3]** It has three states (critic R2-1). *Robust* also requires the plan to cost no more and cause no more deaths at every end (all 8 corners) of the three unvalidated intervention-effect ranges. *Favourable if assumed effects hold* means the Monte Carlo passes but a corner loses. *Low confidence* means the Monte Carlo fails. Only *robust* counts as confident; its calibration is checked in the regret study under each stress world.
+- The verdict thresholds are pre-specified: P(cheaper) ≥ 0.70 and P(no more deaths) ≥ 0.80 (**[v2]** in `config/assumptions.yaml`, `decision:`). **[v3]** It has three states (critic R2-1). *Robust* also requires the plan to cost no more and cause no more deaths at every end (all 8 corners) of the three unvalidated intervention-effect ranges. *Favourable if assumed effects hold* means the Monte Carlo passes but a corner loses. *Low confidence* means the Monte Carlo fails. Only *robust* counts as confident; its calibration is checked in the regret study under each stress world.
 - **[v3] Borderline floor:** a lot whose 90% range reaches 15% never gets standard care only (R2-13).
 - Tornado charts for cost and deaths; re-optimisation sweep for metaphylaxis effect.
 

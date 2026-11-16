@@ -5,7 +5,7 @@
 > **All data in this submission are synthetic.** No dataset was provided. Every performance number shows that the pipeline works on data we generated from documented assumptions, not real-world accuracy. Intervention effects are assumptions with ranges, not results. Medication changes require veterinary review.
 
 ## 1. The problem in one paragraph
-Each week a feedlot manager decides how to receive every arriving lot: standard pull-and-treat, arrival metaphylaxis, extra pen riding with low-stress receiving, or both. Today the decision is a weight rule (metaphylaxis under 700 lb). In our synthetic demo week that rule treats some low-risk lots, misses some risky heavy lots, and ignores labour and hospital limits. Leadership wants fewer sick and dead cattle and fewer antimicrobial doses, with no plan that simply shifts cost or leaves vulnerable cattle without care.
+BRD affected an estimated 21.2% of cattle placed in US feedlots, at a direct treatment cost of $23.60 per case (NAHMS 2011, reported by Johnson and Pendell 2017). Each week a feedlot manager decides how to receive every arriving lot: standard pull-and-treat, arrival metaphylaxis, extra pen riding with low-stress receiving, or both. Today the decision is a weight rule (metaphylaxis under 700 lb). In our synthetic demo week that rule treats some low-risk lots, misses some risky heavy lots, and ignores labour and hospital limits. Leadership wants fewer sick and dead cattle and fewer antimicrobial doses, with no plan that simply shifts cost or leaves vulnerable cattle without care.
 
 ## 2. Approach: Risk → Action → Consequences → Feasibility
 | Step | What we do | Why it is credible |
@@ -13,7 +13,7 @@ Each week a feedlot manager decides how to receive every arriving lot: standard 
 | **Risk** | Lot-level binomial logistic regression predicts each lot's 45-day BRD morbidity *if untreated*, with a 90% range (100 bootstrap refits × multiple imputation of missing records) and P(morbidity ≥ 15%). Literature-signed factors are sign-constrained, and a drift alarm recalibrates when recent lots stop matching | Logistic regression, as in Rojas et al. 2022 (real-data cohort AUC 0.68–0.79). Missing records widen the range and are never hidden. The lot-to-lot spread is estimated out of fold. |
 | **Action** | A mixed-integer program picks one option per lot to minimise expected cost plus a stewardship weight per antimicrobial regimen | **Care floor:** high-risk and borderline lots never get standard care only. Rider hours are hard limits. Hospital or antimicrobial overload is reported as a shortfall to escalate, never silently rationed. |
 | **Consequences** | Cases, deaths, regimens and cost for every plan, always shown together against the current approach | Every parameter lives in `config/assumptions.yaml` with value, range, source and an EST/ASM tag |
-| **Feasibility + uncertainty** | Paired Monte Carlo over all assumption ranges plus a check of every corner of the unvalidated effect ranges gives a three-state, pre-registered verdict: *robust*, *favourable if assumed effects hold*, or *low confidence* | The tool says when it cannot decide, and which assumption would change the answer |
+| **Feasibility + uncertainty** | Paired Monte Carlo over all assumption ranges plus a check of every corner of the unvalidated effect ranges gives a three-state verdict with pre-specified thresholds: *robust*, *favourable if assumed effects hold*, or *low confidence* | The tool says when it cannot decide, and which assumption would change the answer |
 | **Days 1–14** | Pull counts update each lot's risk (Bayesian), flag lots tracking above plan, and project hospital load | Monitoring and staffing actions only; never drug advice |
 
 ## 3. The solution (what a judge can click)
@@ -27,7 +27,7 @@ Each week a feedlot manager decides how to receive every arriving lot: standard 
 | Current approach (metaphylaxis < 700 lb) | 353 | 24.7 | 3,343 | $166.9k |
 | **Recommended plan** | 363 (+10.6) | 22.0* | **2,504 (−25%)** | **$154.2k (−$12.7k)** |
 
-\*Deaths fall only if extra riding cuts case fatality by at least 4%, an unsourced team assumption (default 20%). The firmer results are 839 fewer regimens (100% of draws) and $12.7k lower expected cost (96% of draws), for about 11 more cases (10.6).
+\*Deaths fall only if extra riding cuts case fatality by more than about 4%, an unsourced team assumption (default 20%). The firmer results are 839 fewer regimens (100% of draws) and $12.7k lower expected cost (96% of draws), for about 11 more cases (10.6).
 
 Under uncertainty, the plan is cheaper in 96% of draws, has no more deaths in 94%, and uses fewer regimens in 100%. **Verdict: favourable if assumed effects hold, not robust.** If extra riding does nothing for case fatality and low-stress receiving does little, the plan has more deaths (up to 3.9). If metaphylaxis also works better than assumed (65%), it costs $6.1k more too.
 
@@ -59,10 +59,10 @@ Under uncertainty, the plan is cheaper in 96% of draws, has no more deaths in 94
 | `README.md` | Install, run and test steps |
 | `app/`, `src/`, `config/` | Dashboard, model, optimizer, all assumptions |
 | `data/` | Synthetic demo data, data dictionary, generator manifest |
-| `docs/` | Design, validation report, critic log, demo case, literature review, sources, judging rubric |
+| `docs/` | Design, validation report, critic log, demo case, literature review, sources |
 | `reports/validation_results.json` | Machine-readable validation results |
 | `tests/`, `scripts/` | Unit, app, browser and critic tests; validation runner |
 
-**Run:** `pip install -r requirements.txt` then `streamlit run app/app.py`. **Test:** `pytest -q`. **Reproduce validation:** `python -m scripts.run_validation`.
+**Run:** `pip install -r requirements.txt` then `streamlit run app/app.py`. **Test:** `pytest -q` (about 10 minutes with the critic suite). **Reproduce validation:** `python -m scripts.run_validation`.
 
-*Built with AI assistance (Claude Code); the team verified the claims, citations and results. Disclosure in `README.md`.*
+*Built with AI assistance (Claude Code); cited figures were checked against the supplied PDFs with AI assistance, and the team is responsible for all claims and results. Disclosure in `README.md`.*

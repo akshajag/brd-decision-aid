@@ -2,6 +2,8 @@
 
 A working decision aid that helps feedlot managers decide what to do with arriving cattle lots during the **first 45 days on feed**, to manage bovine respiratory disease (BRD). Built for the AISFS × Merck Animal Health Interdisciplinary Hackathon 2026.
 
+**Why it matters:** BRD affected an estimated 21.2% of cattle placed in US feedlots, at a direct treatment cost of $23.60 per case (NAHMS 2011, reported by Johnson and Pendell 2017). Only 15.6% of feedlot cattle received group antimicrobial treatment (NAHMS 2019), so who gets metaphylaxis is a real weekly choice.
+
 **In plain English:** cattle often get pneumonia (BRD) in the first weeks after they arrive at a feedlot. Each week the manager must decide, for every group of new cattle, whether to give them a preventive antimicrobial (metaphylaxis), watch them more closely, or both, without running out of staff or hospital pens. This tool estimates each group's risk, recommends an action, shows what that would mean for sick cattle, deaths, antimicrobial use and money compared with today, and says plainly when the evidence is too weak to be sure. Open the app's **Start here** tab for a one-minute overview and a glossary.
 
 It connects four things for every arriving lot:
@@ -12,7 +14,7 @@ It connects four things for every arriving lot:
 
 The current operating approach that everything is compared against is editable. The default (metaphylaxis under 700 lb) is deliberately generous; NAHMS 2019 reports 15.6% of cattle group-treated. Scope: day-0 arrival decisions, plus a days 1–14 check-in that updates each lot's risk from BRD pulls recorded so far.
 
-**Judges:** `SUBMISSION_CHECKLIST.md` maps each submission requirement to its file. `SUBMISSION_OVERVIEW.pdf` is the 2-page summary.
+**Judges:** `SUBMISSION_CHECKLIST.md` maps each submission requirement to its file. `SUBMISSION_OVERVIEW.pdf` is a short summary.
 
 > **Demonstration build.** All lots are **synthetic**, because no dataset was provided. Intervention effects are **adjustable assumptions**, not validated results. **Medication-related recommendations require veterinary review.**
 
@@ -25,10 +27,11 @@ pip install -r requirements.txt
 python -m src.data.generate --seed 42   # optional: data/ already contains the seeded demo files
 streamlit run app/app.py                # opens http://localhost:8501
 ```
-Run the tests (unit tests plus a headless end-to-end run of the dashboard):
+Run the tests (unit tests plus a headless end-to-end run of the dashboard, about 2 minutes):
 ```bash
-pytest -q
+pytest -q tests/test_pipeline.py tests/test_followup.py tests/test_app.py
 ```
+Plain `pytest -q` also runs the critic suite (about 10 minutes in total).
 Optional real-browser smoke test (uses your installed Edge or Chrome; skipped if Playwright is missing):
 ```bash
 pip install playwright==1.65.2
@@ -42,12 +45,12 @@ python -m scripts.build_overview         # SUBMISSION_OVERVIEW.md -> PDF
 python -m scripts.build_zip              # dist/BRD_Decision_Aid_submission.zip
 pytest -q tests/critic                  # adversarial acceptance tests (about 10 minutes)
 ```
-The first launch takes about 15 s while the risk model fits. The fitted model is then cached in `.cache/` (rebuilt automatically when the data, assumptions or model code change), so later launches start in a few seconds. Changing any input recomputes in a few seconds.
+The first launch takes about 30–40 s while the risk model fits. The fitted model is then cached in `.cache/` (rebuilt automatically when the data, assumptions or model code change), so later launches start in a few seconds. Changing any input recomputes in a few seconds.
 
 ## Using the dashboard
 0. **Start here**: this week's answer in plain language (what changes, what it means for health, antimicrobials and cost, how sure we are, what needs a person), the four-step logic, what to trust and what not to, and a glossary.
 1. **Lots & data**: use the demo week or upload a CSV (a template is in the sidebar). You can edit cells directly. Missing records stay visible and widen uncertainty.
-2. **Risk priorities**: expected 45-day morbidity without metaphylaxis, with a 90% range, main drivers, and a confidence label (`confident` / `borderline` / `insufficient data`). An expandable **individual animals** view ranks the head in one lot by synthetic arrival weight, so pen riders know whom to look at first. It is a ranking aid, not a diagnosis: animal risks average to the lot's risk, and the within-lot weight spread is an assumption.
+2. **Risk priorities**: expected 45-day morbidity without metaphylaxis, with a 90% range, main drivers, and a confidence label (`confident` / `borderline` / `insufficient data`). An expandable **individual animals** view illustrates how a within-lot ranking would look. Per-head weights are synthetic, so the ranking is simply lightest-first and identifies no real animal; with real per-head records it would become a pen-rider watch list.
 3. **Plan vs current approach**: the recommended plan compared with the current weight-rule approach and two simple policies. Shows the trade-off chart, a partial-budget waterfall of where the money moves, lot-by-lot reasons, binding constraints, capacity shortfalls, and the probability the plan beats the current approach under uncertainty.
 4. **What-if & sensitivity**: change assumptions and capacities in the sidebar. A tornado chart shows which inputs could flip the advantage, and the plan is re-optimised across metaphylaxis effect sizes.
 5. **Decision summary**: a downloadable Markdown summary and lot plan CSV, with a veterinary review block.
@@ -86,4 +89,4 @@ tests/                        unit tests, headless app test, Playwright browser 
 - To use real data, upload lots with the same columns. To refit the model, replace `data/historical_cohorts.csv` with real records in the same schema.
 
 ## Disclosure
-This project was built with the help of AI tools (Claude Code, Anthropic) for code, data-generation design, documentation and an internal critique pass. Open-source software: Python, Streamlit, pandas, NumPy, scikit-learn, SciPy and Plotly. The team is responsible for verifying every claim, citation and result. External resources are listed in `docs/SOURCES.md`. The header photo is a public-domain USDA ARS image (Keith Weller).
+This project was built with the help of AI tools (Claude Code, Anthropic) for code, data-generation design, literature screening, documentation and an internal critique pass. Open-source software: Python, Streamlit, pandas, NumPy, scikit-learn, SciPy and Plotly. The team is responsible for verifying every claim, citation and result. External resources are listed in `docs/SOURCES.md`. The header photo is a public-domain USDA ARS image (Keith Weller).

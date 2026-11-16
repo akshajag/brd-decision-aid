@@ -14,7 +14,8 @@ TOP = "BRD_Decision_Aid"
 EXCLUDE_DIRS = {".cache", ".venv", "venv", "__pycache__", ".pytest_cache", ".remember", ".git", "dist", ".claude",
                 ".streamlit_cache", "node_modules", "test-results"}
 EXCLUDE_SUFFIX = {".pyc", ".log"}
-EXCLUDE_NAMES = {"TECHNICAL_BRIEF.html", "SUBMISSION_OVERVIEW.html", "CLAUDE.md"}
+EXCLUDE_NAMES = {"TECHNICAL_BRIEF.html", "SUBMISSION_OVERVIEW.html", "CLAUDE.md", "JUDGING_RUBRIC.md", "IMPLEMENTATION_PLAN.md",
+                 "PRESENTATION_PREP.md"}
 
 
 def files():

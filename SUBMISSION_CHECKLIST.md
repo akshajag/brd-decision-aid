@@ -15,9 +15,9 @@ Where each required item is in this ZIP. All paths are relative to the `BRD_Deci
 | 4 | **Demonstration case**: one end-to-end decision | `docs/DEMO_CASE.md` | Inputs: 24 lots, 3,406 head, 4 yards, capacities. Alternatives: current rule, recommended plan, metaphylaxis for all, no metaphylaxis. Recommendation: 17 lots change, with reasons and veterinary flags. Projected consequences: cases, deaths, antimicrobial regimens, cost and capacity, with uncertainty and the confidence verdict. It also includes a 3-minute live script. The dashboard's **Summary** tab downloads the same decision as Markdown. |
 | — | **Disclosure** of external resources and AI tools | `README.md` under "Disclosure", `docs/SOURCES.md` (every source with its licence), the disclosure paragraph on page 4 of the brief | AI tool: Claude Code (Anthropic), used for code, synthetic-data design, documentation and an internal critique pass. External sources: the challenge-supplied papers plus four the team added (Lin 1989 and Tedeschi 2006 as methods; Baptiste and Kyvsgaard 2017 and Neal et al. 2024 as parameter sources). Software: Python, Streamlit, pandas, NumPy, scikit-learn, SciPy, Plotly. The team is responsible for verifying claims, citations and results. |
 
-**Start here:** `SUBMISSION_OVERVIEW.pdf` is a 2-page summary of the approach, the solution and the key findings.
+**Start here:** `SUBMISSION_OVERVIEW.pdf` is a short summary of the approach, the solution and the key findings.
 
 ## Honesty notes for reviewers
 - All metrics computed on the synthetic data show that the pipeline works. They are not real-world accuracy. The real-data benchmark is Rojas et al. 2022, with cohort AUC 0.68–0.79.
-- Intervention effects are adjustable assumptions, not demonstrated results. The plan's death reduction holds only if extra riding cuts case fatality by at least 4%.
+- Intervention effects are adjustable assumptions, not demonstrated results. The plan's death reduction holds only if extra riding cuts case fatality by more than about 4%.
 - Medication-related recommendations require veterinary review. No drug names or doses are given.

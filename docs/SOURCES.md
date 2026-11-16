@@ -77,8 +77,8 @@ These sources were found in a rapid literature screen (see `docs/LITERATURE_REVI
 | `app/assets/cattle_herd.jpg` | "Cattle herd", photo by Keith Weller, USDA Agricultural Research Service (image K4328-8), via Wikimedia Commons (File:Cattle_herd.jpg), 960 px version | Public domain (work of the US federal government) | Dashboard header banner (decorative only, not data) |
 
 ## AI tools
-Claude Code (Anthropic) was used to help write code, design the synthetic data and draft documentation. The team must check every number against the PDFs before submission.
+Claude Code (Anthropic) was used to help write code, design the synthetic data, run the literature screen and draft documentation. The numbers used in `config/assumptions.yaml` were checked against the supplied PDFs with AI assistance; the team is responsible for them.
 
-## Verification still to do
-- [ ] Recheck the Weber 2024 price table in the original PDF (the extracted layout was scrambled). It is not currently used for any parameter value.
-- [ ] Have the consulting veterinarian review the defaults for `metaphylaxis_morbidity_rrr`, `enhanced_monitoring_cfr_rrr` and `receiving_protocol_morbidity_rrr`, or replace them with cited trial or meta-analysis estimates.
+## Known open items (disclosed)
+- The Weber 2024 price table was not re-checked (the extracted layout was scrambled). It is not used for any parameter value.
+- The three intervention-effect defaults (`metaphylaxis_morbidity_rrr`, `enhanced_monitoring_cfr_rrr`, `receiving_protocol_morbidity_rrr`) have not been reviewed by a veterinarian. This is why they are sliders and why the verdict is conditional.
