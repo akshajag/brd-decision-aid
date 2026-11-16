@@ -14,6 +14,8 @@ It connects four things for every arriving lot:
 
 The current operating approach that everything is compared against is editable. The default (metaphylaxis under 700 lb) is deliberately generous; NAHMS 2019 reports 15.6% of cattle group-treated. Scope: day-0 arrival decisions, plus a days 1–14 check-in that updates each lot's risk from BRD pulls recorded so far.
 
+**Demo video (5 min):** [`video/BRD_Decision_Aid_demo.mp4`](video/BRD_Decision_Aid_demo.mp4), a narrated walkthrough of the dashboard on the synthetic demo week.
+
 **Judges:** `SUBMISSION_CHECKLIST.md` maps each submission requirement to its file. `SUBMISSION_OVERVIEW.pdf` is a short summary.
 
 > **Demonstration build.** All lots are **synthetic**, because no dataset was provided. Intervention effects are **adjustable assumptions**, not validated results. **Medication-related recommendations require veterinary review.**
@@ -89,4 +91,4 @@ tests/                        unit tests, headless app test, Playwright browser 
 - To use real data, upload lots with the same columns. To refit the model, replace `data/historical_cohorts.csv` with real records in the same schema.
 
 ## Disclosure
-This project was built with the help of AI tools (Claude Code, Anthropic) for code, data-generation design, literature screening, documentation and an internal critique pass. Open-source software: Python, Streamlit, pandas, NumPy, scikit-learn, SciPy and Plotly. The team is responsible for verifying every claim, citation and result. External resources are listed in `docs/SOURCES.md`. The header photo is a public-domain USDA ARS image (Keith Weller).
+This project was built with the help of AI tools (Claude Code, Anthropic) for code, data-generation design, literature screening, documentation and an internal critique pass. The demo video's screen capture was scripted with Playwright, and the narration is the team's own voice, with pauses trimmed and levels evened by ffmpeg. Open-source software: Python, Streamlit, pandas, NumPy, scikit-learn, SciPy and Plotly. The team is responsible for verifying every claim, citation and result. External resources are listed in `docs/SOURCES.md`. The header photo is a public-domain USDA ARS image (Keith Weller).
